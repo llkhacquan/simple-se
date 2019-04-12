@@ -15,21 +15,18 @@ import java.util.stream.Collectors;
  */
 public class InvertedIndexer {
 	/**
-	 * hold
+	 * hold the inverted index: term => documents
 	 */
 	private final Map<TermId, Set<DocId>> term2documentsMap;
-	Set<DocId> docIdSet;
 
 	private InvertedIndexer(Map<TermId, Set<DocId>> term2documentsMap) {
-		this.term2documentsMap = term2documentsMap;
+		this.term2documentsMap = Collections.unmodifiableMap(term2documentsMap);
 	}
 
 	/**
 	 * read data from file and build the {@link Dictionary}
 	 */
-	public static @NotNull InvertedIndexer createFromFile(@NotNull File data, @NotNull Dictionary dictionary) throws IOException {
-		Tokenizer tokenizer = new Tokenizer();
-		List<Document> documents = new ArrayList<>();
+	public static @NotNull InvertedIndexer createFromFile(@NotNull File data, @NotNull Tokenizer tokenizer, @NotNull Dictionary dictionary, @NotNull DocumentStorage documentStorage) throws IOException {
 		Map<TermId, Set<DocId>> term2documentsMap = new HashMap<>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(data))) {
@@ -39,7 +36,7 @@ public class InvertedIndexer {
 				final List<Term> terms = tokenizer.tokenize(line);
 				final List<TermId> termIds = terms.stream().map(dictionary::addTerm).collect(Collectors.toList());
 				DocId newDocId = new DocId(count);
-				documents.add(new Document(newDocId, line, termIds));
+				documentStorage.add(new Document(newDocId, line, termIds));
 				count++;
 				// for each term, put the new document to its docIds set
 				for (TermId termId : termIds) {
@@ -54,7 +51,7 @@ public class InvertedIndexer {
 				}
 			}
 		}
-		return null;
+		return new InvertedIndexer(term2documentsMap);
 	}
 
 	public Iterable<DocId> getDocumentsContainingTerm(TermId termId) {

@@ -1,11 +1,10 @@
 package quannk.test.se.search;
 
-import quannk.test.se.index.*;
+import org.javatuples.Pair;
+import quannk.test.se.index.Document;
 
-import java.util.Map;
+import java.util.List;
 
-public class Searcher {
-	Map<DocId, Document> documentsStorage;
-	TwoWayMap<TermId, Term> dictionary;
-	InvertedIndexer invertedIndexer;
+public interface Searcher {
+	List<Pair<Score, Document>> search(String query, int limit);
 }

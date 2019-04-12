@@ -21,6 +21,11 @@ public class Document {
 		this.termIds = Collections.unmodifiableSet(new HashSet<>(termIds));
 	}
 
+	@Override
+	public String toString() {
+		return rawContent;
+	}
+
 	public @NotNull DocId getId() {
 		return id;
 	}
