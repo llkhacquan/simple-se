@@ -23,7 +23,8 @@ public class Runner {
 		InvertedIndexer indexer = InvertedIndexer.createFromFile(file, tokenizer, dictionary, documentsStorage);
 		Ranker<DoubleScore> ranker = new SimpleRanker();
 		QueryParser queryParser = new QueryParser(tokenizer, dictionary);
-		searcher = new InvertedIndexSearcher(indexer, documentsStorage, ranker, queryParser);
+		Ranker<DoubleScore> bm25Ranker = new BM25Ranker(documentsStorage, indexer);
+		searcher = new InvertedIndexSearcher(indexer, documentsStorage, bm25Ranker, queryParser);
 	}
 
 	public static void main(String[] args) throws IOException {

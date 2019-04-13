@@ -15,7 +15,7 @@ public class SimpleRanker implements Ranker<DoubleScore> {
 
 	@Override
 	public DoubleScore score(Document document, Query query) {
-		final Set<TermId> term1 = document.getTermIds();
+		final Set<TermId> term1 = new HashSet<>(document.getTermIds());
 		final Set<TermId> term2 = new HashSet<>(query.getTerms());
 
 		final Set<TermId> allTerms = new HashSet<>(term1);

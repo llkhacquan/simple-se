@@ -2,10 +2,9 @@ package quannk.test.se.index;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * class holds information of documents in index; in this problem, it's a product
@@ -13,12 +12,12 @@ import java.util.Set;
 public class Document {
 	private final @NotNull DocId id;
 	private final @NotNull String rawContent;
-	private final @NotNull Set<TermId> termIds;
+	private final @NotNull List<TermId> termIds;
 
 	public Document(@NotNull DocId id, @NotNull String rawContent, @NotNull List<TermId> termIds) {
 		this.id = id;
 		this.rawContent = rawContent;
-		this.termIds = Collections.unmodifiableSet(new HashSet<>(termIds));
+		this.termIds = Collections.unmodifiableList(new ArrayList<>(termIds));
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class Document {
 		return id;
 	}
 
-	public @NotNull Set<TermId> getTermIds() {
+	public @NotNull List<TermId> getTermIds() {
 		return termIds;
 	}
 

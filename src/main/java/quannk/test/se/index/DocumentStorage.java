@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,5 +20,13 @@ public class DocumentStorage {
 
 	public Document getDoc(DocId docId) {
 		return documents.get(docId.getId());
+	}
+
+	public int size() {
+		return documents.size();
+	}
+
+	public Iterator<Document> iterator() {
+		return documents.iterator();
 	}
 }

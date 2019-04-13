@@ -1,7 +1,10 @@
 package quannk.test.se.index;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import quannk.test.se.Tokenizer;
+import quannk.test.se.search.Runner;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
  * In general, the indexer holds two abstract things: all documents and inverted-map from term => documents which contains term
  */
 public class InvertedIndexer {
+	private final static Logger LOG = LoggerFactory.getLogger(Runner.class);
 	/**
 	 * hold the inverted index: term => documents
 	 */
@@ -27,6 +31,7 @@ public class InvertedIndexer {
 	 * read data from file and build the {@link Dictionary}
 	 */
 	public static @NotNull InvertedIndexer createFromFile(@NotNull File data, @NotNull Tokenizer tokenizer, @NotNull Dictionary dictionary, @NotNull DocumentStorage documentStorage) throws IOException {
+		long start = System.currentTimeMillis();
 		Map<TermId, Set<DocId>> term2documentsMap = new HashMap<>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(data))) {
@@ -51,10 +56,15 @@ public class InvertedIndexer {
 				}
 			}
 		}
+		LOG.info("Loaded data from {} in {}ms", data, System.currentTimeMillis() - start);
 		return new InvertedIndexer(term2documentsMap);
 	}
 
 	public Iterable<DocId> getDocumentsContainingTerm(TermId termId) {
 		return term2documentsMap.get(termId);
+	}
+
+	public int getNumberOfDocumentsContainingTerm(TermId termId) {
+		return term2documentsMap.get(termId).size();
 	}
 }
