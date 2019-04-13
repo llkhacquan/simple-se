@@ -12,6 +12,10 @@ public class DoubleScore implements Score {
 		this.score = score;
 	}
 
+	public double getScore() {
+		return score;
+	}
+
 	@Override
 	public int compareTo(@NotNull Score o) {
 		if (o instanceof DoubleScore) {

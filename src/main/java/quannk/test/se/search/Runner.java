@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class Runner {
-	private final Searcher searcher;
+	private final Searcher searcher1;
+	private final Searcher searcher2;
 
 	public Runner(File file) throws IOException {
+
 		Dictionary dictionary = new Dictionary();
 		DocumentStorage documentsStorage = new DocumentStorage();
 		final Tokenizer tokenizer = new Tokenizer();
@@ -24,7 +26,8 @@ public class Runner {
 		Ranker<DoubleScore> ranker = new SimpleRanker();
 		QueryParser queryParser = new QueryParser(tokenizer, dictionary);
 		Ranker<DoubleScore> bm25Ranker = new BM25Ranker(documentsStorage, indexer);
-		searcher = new InvertedIndexSearcher(indexer, documentsStorage, bm25Ranker, queryParser);
+		searcher1 = new InvertedIndexSearcher(indexer, documentsStorage, bm25Ranker, queryParser);
+		searcher2 = new InvertedIndexSearcher(indexer, documentsStorage, ranker, queryParser);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -33,7 +36,7 @@ public class Runner {
 		try (BufferedReader reader = new BufferedReader(new FileReader(queryFile))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
-				final List<Pair<Score, Document>> searchResult = runner.searcher.search(line, 3);
+				final List<Pair<Score, Document>> searchResult = runner.search(line, 3, true);
 				if (searchResult.size() == 0) {
 					System.out.printf("%s\t%s\t%s\n", line, 0, "NONE");
 				} else {
@@ -43,6 +46,14 @@ public class Runner {
 				}
 
 			}
+		}
+	}
+
+	public List<Pair<Score, Document>> search(String query, int limit, boolean useBM25) {
+		if (useBM25) {
+			return searcher1.search(query, limit);
+		} else {
+			return searcher2.search(query, limit);
 		}
 	}
 }
