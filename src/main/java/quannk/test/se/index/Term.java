@@ -2,6 +2,7 @@ package quannk.test.se.index;
 
 import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
+import quannk.test.se.TextHelper;
 
 /**
  * {@link Term} is the smallest unit of a document. A document contains many terms, many times with order
@@ -13,7 +14,7 @@ public class Term {
 	private final @NotNull String raw;
 
 	public Term(@NotNull String raw) {
-		Preconditions.checkArgument(raw.matches("[a-z0-9]+"), "[" + raw + "] is not a valid term");
+		Preconditions.checkArgument(TextHelper.removeAccents(raw).matches("[a-z0-9]+"), "[" + raw + "] is not a valid term");
 		this.raw = raw;
 	}
 

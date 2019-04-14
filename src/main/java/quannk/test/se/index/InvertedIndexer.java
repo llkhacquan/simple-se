@@ -1,8 +1,10 @@
 package quannk.test.se.index;
 
+import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import quannk.test.se.TextHelper;
 import quannk.test.se.Tokenizer;
 import quannk.test.se.search.Runner;
 
@@ -38,7 +40,18 @@ public class InvertedIndexer {
 			String line;
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
-				final List<Term> terms = tokenizer.tokenize(line);
+				final String normalized = TextHelper.normalizerString(line);
+				final List<Term> termsWithNoAccents = tokenizer.tokenize(TextHelper.removeAccents(normalized), false);
+				final List<Term> termsWithAccents = tokenizer.tokenize(normalized, false);
+				Preconditions.checkArgument(termsWithAccents.size() == termsWithNoAccents.size());
+				final List<Term> terms = new ArrayList<>();
+				for (int i = 0; i < termsWithAccents.size(); i++) {
+					Preconditions.checkArgument(termsWithNoAccents.get(i).getRaw().equals(TextHelper.removeAccents(termsWithAccents.get(i).getRaw())));
+					terms.add(termsWithAccents.get(i));
+					if (!termsWithAccents.get(i).equals(termsWithNoAccents.get(i))) {
+						terms.add(termsWithNoAccents.get(i));
+					}
+				}
 				final List<TermId> termIds = terms.stream().map(dictionary::addTerm).collect(Collectors.toList());
 				DocId newDocId = new DocId(count);
 				documentStorage.add(new Document(newDocId, line, termIds));

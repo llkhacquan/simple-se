@@ -42,3 +42,4 @@ from termimal: `./gradlew build copyLib`
 Many abstract stuffs which can be replaced by very simple solution were placed in the project.
 - There are a lot of duplications in the given *product_names.txt*. However, the duplications were ignored. It might be the same book from different stores.
 - Code is tested under ubuntu 18.04; jdk-8
+- **enhance_accent** is a branch which support term with accent; btw, it's WIP  
