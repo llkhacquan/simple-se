@@ -1,8 +1,10 @@
 # simple search-engine
 
-#problem
+## problem
+
 Given some products (50k strings); implement a simple searcher using inverted index; BM25
-#terminology
+
+## terminology
 - *Document*: holds information about one object which can be searched later.
     - Object here can be a web-page, a product, a movie, etc; depends on the type of search-engine  
 - *Term*: atomic unit of a *document*. *Term*s are actually words in a *document*s  
@@ -10,8 +12,8 @@ Given some products (50k strings); implement a simple searcher using inverted in
     - A *term* can appear in many *document*
 - *Dictionary*: a collection of all terms which appear in any document
 - Query: holds information about input string for searching
-    - In this product, 
-#implementation
+
+## implementation
 Big components:
 - QueryParser: processing input raw-query to the formal *Query*
     - the query parser does some stuffs: normalization, tokenization , etc 
@@ -25,9 +27,11 @@ Big components:
     - use *indexer* to get collections of *document*s which contains any *term* from *query*
     - then use *ranker* to select the most relevant *document*s
     - render search-engine-result-page which are not included in this project
-#build code
+
+## build code
 from termimal: `./gradlew build copyLib`
-#run and search
+
+## run and search
 - start simple-search-server `bash bin/start-server.sh <data_file> [optinal_port]`
     - example: `bash bin/start-server.sh product_names.txt 5050`
     - `5050` is the default port and can be removed
@@ -37,7 +41,7 @@ from termimal: `./gradlew build copyLib`
     - note that simple-search-server returns at most 10 *document*s (*product*)
 - You can search for multiple queries using `quannk.test.se.search.Runner`
     
-#note
+## note
 - The code is implemented such that the searcher can be improved and upgraded in many way. 
 Many abstract stuffs which can be replaced by very simple solution were placed in the project.
 - There are a lot of duplications in the given *product_names.txt*. However, the duplications were ignored. It might be the same book from different stores.
